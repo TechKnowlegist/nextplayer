@@ -978,3 +978,179 @@
   display: flex;
   gap: 12px;
 }
+
+/* ---- Simon ---- */
+.np-simon-wrap {
+  position: relative;
+}
+
+.np-simon-grid {
+  display: grid;
+  grid-template-columns: 90px 90px 90px;
+  grid-template-rows: 90px 90px 90px;
+  gap: 6px;
+  place-items: center;
+  padding: 20px;
+}
+
+.np-simon-pad {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  transition: background 0.1s ease, box-shadow 0.1s ease;
+}
+
+.np-simon-pad.up { grid-column: 2; grid-row: 1; }
+.np-simon-pad.left { grid-column: 1; grid-row: 2; }
+.np-simon-pad.right { grid-column: 3; grid-row: 2; }
+.np-simon-pad.down { grid-column: 2; grid-row: 3; }
+
+.np-simon-pad.on {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.7);
+}
+
+.np-simon-center {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* ---- Whack-a-Mole ---- */
+.np-whack-wrap {
+  position: relative;
+}
+
+.np-whack-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 12px;
+  padding: 24px;
+}
+
+.np-whack-hole {
+  border-radius: 50%;
+  background: radial-gradient(circle, #1a1410 0%, #05070a 70%);
+  border: 3px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.np-whack-hole.cursor {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+}
+
+.np-whack-mole {
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+}
+
+/* ---- Tic-Tac-Toe ---- */
+.np-ttt-wrap {
+  position: relative;
+}
+
+.np-ttt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  grid-template-rows: repeat(3, 90px);
+  gap: 6px;
+  padding: 20px;
+}
+
+.np-ttt-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.np-ttt-cell.cursor {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+}
+
+.np-ttt-cell.x {
+  color: var(--accent-1);
+}
+
+.np-ttt-cell.o {
+  color: var(--heading-2);
+}
+
+/* ---- 2048 ---- */
+.np-2048-wrap {
+  position: relative;
+}
+
+.np-2048-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 70px);
+  grid-template-rows: repeat(4, 70px);
+  gap: 8px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+}
+
+.np-2048-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  transition: background 0.15s ease;
+}
+
+/* ---- Memory Match ---- */
+.np-memory-wrap {
+  position: relative;
+}
+
+.np-memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 70px);
+  grid-template-rows: repeat(4, 70px);
+  gap: 8px;
+  padding: 20px;
+}
+
+.np-memory-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.np-memory-card.cursor {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+}
+
+.np-memory-card.up {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.np-memory-card.matched {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.4);
+}

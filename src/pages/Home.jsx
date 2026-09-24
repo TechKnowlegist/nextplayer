@@ -6,6 +6,16 @@ const GAMES = [
   { id: 'racer', title: 'Drift Racer', emoji: '🏎️', tag: 'Play now', path: '/games/drift-racer', blurb: 'Top-down laps, drifting, and boost. Built for triggers.' },
   { id: 'chomper', title: 'Maze Chomper', emoji: '👾', tag: 'Play now', path: '/games/maze-chomper', blurb: 'Eat every dot. Dodge every ghost.' },
   { id: 'shooter', title: 'Star Blaster', emoji: '🚀', tag: 'Play now', path: '/games/star-blaster', blurb: 'Wave after wave of arcade space combat.' },
+  { id: 'pong', title: 'Pong', emoji: '🏓', tag: 'Play now', path: '/games/pong', blurb: 'The original. First to seven against the CPU.' },
+  { id: 'breakout', title: 'Breakout', emoji: '🧱', tag: 'Play now', path: '/games/breakout', blurb: 'Bounce, break every brick, don’t drop the ball.' },
+  { id: 'asteroids', title: 'Asteroids', emoji: '☄️', tag: 'Play now', path: '/games/asteroids', blurb: 'Rotate, thrust, blast rocks into smaller rocks.' },
+  { id: 'flappy', title: 'Flappy', emoji: '🐤', tag: 'Play now', path: '/games/flappy', blurb: 'One button. Infinite regret. How far can you get?' },
+  { id: 'simon', title: 'Simon', emoji: '🧠', tag: 'Play now', path: '/games/simon', blurb: 'Watch the pattern, repeat it, and hope your memory holds.' },
+  { id: 'frogger', title: 'Frogger', emoji: '🐸', tag: 'Play now', path: '/games/frogger', blurb: 'Cross the traffic. Don’t become a hood ornament.' },
+  { id: 'whack', title: 'Whack-a-Mole', emoji: '🔨', tag: 'Play now', path: '/games/whack-a-mole', blurb: '30 seconds. Fast hands only.' },
+  { id: 'ttt', title: 'Tic-Tac-Toe', emoji: '⭕', tag: 'Play now', path: '/games/tic-tac-toe', blurb: 'Simple, fast, and the CPU actually tries to win.' },
+  { id: '2048', title: '2048', emoji: '🔢', tag: 'Play now', path: '/games/2048', blurb: 'Slide, merge, chase the big tile.' },
+  { id: 'memory', title: 'Memory Match', emoji: '🃏', tag: 'Play now', path: '/games/memory-match', blurb: 'Flip two, find the pairs, beat your best move count.' },
 ];
 
 export default function Home() {

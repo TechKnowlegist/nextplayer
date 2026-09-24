@@ -9,6 +9,16 @@ import Snake from './pages/games/Snake';
 import DriftRacer from './pages/games/DriftRacer';
 import MazeChomper from './pages/games/MazeChomper';
 import StarBlaster from './pages/games/StarBlaster';
+import Pong from './pages/games/Pong';
+import Breakout from './pages/games/Breakout';
+import Asteroids from './pages/games/Asteroids';
+import Flappy from './pages/games/Flappy';
+import Simon from './pages/games/Simon';
+import Frogger from './pages/games/Frogger';
+import WhackAMole from './pages/games/WhackAMole';
+import TicTacToe from './pages/games/TicTacToe';
+import Game2048 from './pages/games/Game2048';
+import MemoryMatch from './pages/games/MemoryMatch';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -26,6 +36,16 @@ export default function App() {
           <Route path="/games/drift-racer" element={<DriftRacer />} />
           <Route path="/games/maze-chomper" element={<MazeChomper />} />
           <Route path="/games/star-blaster" element={<StarBlaster />} />
+          <Route path="/games/pong" element={<Pong />} />
+          <Route path="/games/breakout" element={<Breakout />} />
+          <Route path="/games/asteroids" element={<Asteroids />} />
+          <Route path="/games/flappy" element={<Flappy />} />
+          <Route path="/games/simon" element={<Simon />} />
+          <Route path="/games/frogger" element={<Frogger />} />
+          <Route path="/games/whack-a-mole" element={<WhackAMole />} />
+          <Route path="/games/tic-tac-toe" element={<TicTacToe />} />
+          <Route path="/games/2048" element={<Game2048 />} />
+          <Route path="/games/memory-match" element={<MemoryMatch />} />
           {/* Anything that doesn't match a page above lands on the 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
