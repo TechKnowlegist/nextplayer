@@ -114,7 +114,15 @@ function friendlyName(id) {
 function findPad() {
   if (typeof navigator === 'undefined' || !navigator.getGamepads) return null;
   const pads = navigator.getGamepads();
-  if (padIndex !== null && pads[padIndex]) return pads[padIndex];
+  // Re-check .connected on every poll rather than trusting the cached index
+  // forever — gamepaddisconnected doesn't reliably fire for Bluetooth
+  // controllers (DualSense included), so without this a controller that
+  // silently drops stays "connected" until the page reloads.
+  if (padIndex !== null) {
+    const cached = pads[padIndex];
+    if (cached && cached.connected) return cached;
+    padIndex = null;
+  }
   for (const pad of pads) {
     if (pad && pad.connected) {
       padIndex = pad.index;

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useControllerStatus } from '../engine/useController';
 
 const GAMES = [
-  { id: 'snake', title: 'Snake', emoji: '🐍', tag: 'Up first', blurb: "The classic. Eat, grow, and don't bite yourself." },
+  { id: 'snake', title: 'Snake', emoji: '🐍', tag: 'Play now', path: '/games/snake', blurb: "The classic. Eat, grow, and don't bite yourself." },
   { id: 'racer', title: 'Drift Racer', emoji: '🏎️', tag: 'Coming soon', blurb: 'Top-down laps, drifting, and boost. Built for triggers.' },
   { id: 'chomper', title: 'Maze Chomper', emoji: '👾', tag: 'Coming soon', blurb: 'Eat every dot. Dodge every ghost.' },
   { id: 'shooter', title: 'Star Blaster', emoji: '🚀', tag: 'Coming soon', blurb: 'Wave after wave of arcade space combat.' },
@@ -39,18 +39,24 @@ export default function Home() {
       <section id="games" className="np-games">
         <h2>Games</h2>
         <div className="np-game-grid">
-          {GAMES.map((game) => (
-            <div key={game.id} className="np-game-card" tabIndex={0} data-nav>
-              <div className="np-game-art" aria-hidden="true">{game.emoji}</div>
-              <div className="np-game-info">
-                <div className="np-game-top">
-                  <h3>{game.title}</h3>
-                  <span className={`np-tag ${game.tag === 'Up first' ? 'hot' : ''}`}>{game.tag}</span>
+          {GAMES.map((game) => {
+            const Card = game.path ? Link : 'div';
+            const cardProps = game.path
+              ? { to: game.path }
+              : { tabIndex: 0, 'data-nav': true };
+            return (
+              <Card key={game.id} className="np-game-card" {...cardProps}>
+                <div className="np-game-art" aria-hidden="true">{game.emoji}</div>
+                <div className="np-game-info">
+                  <div className="np-game-top">
+                    <h3>{game.title}</h3>
+                    <span className={`np-tag ${game.tag === 'Play now' ? 'hot' : ''}`}>{game.tag}</span>
+                  </div>
+                  <p>{game.blurb}</p>
                 </div>
-                <p>{game.blurb}</p>
-              </div>
-            </div>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </section>
     </main>

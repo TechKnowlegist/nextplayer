@@ -324,11 +324,14 @@
 }
 
 .np-game-card {
+  display: block;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
@@ -869,4 +872,104 @@
   background: none;
   -webkit-text-fill-color: #f87171;
   color: #f87171;
+}
+
+/* ---- Snake ---- */
+.np-snake {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 30px;
+}
+
+.np-snake-hud {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.np-snake-hud h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.np-snake-mute {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+.np-snake-mute:hover {
+  transform: scale(1.08);
+  border-color: var(--accent-2);
+}
+
+.np-snake-scores {
+  display: flex;
+  gap: 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.np-snake-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 40px rgba(34, 197, 94, 0.08);
+}
+
+.np-snake-canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.np-snake-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(5, 7, 10, 0.88);
+  text-align: center;
+  padding: 20px;
+}
+
+.np-snake-overlay h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.np-snake-overlay-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.np-snake-hint {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.np-snake-controls {
+  font-size: 0.85rem;
+  opacity: 0.7;
 }

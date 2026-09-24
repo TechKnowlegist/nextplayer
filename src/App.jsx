@@ -5,6 +5,7 @@ import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import ControllerTest from './pages/ControllerTest';
 import Account from './pages/Account';
+import Snake from './pages/games/Snake';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/controller" element={<ControllerTest />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/games/snake" element={<Snake />} />
           {/* Anything that doesn't match a page above lands on the 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
