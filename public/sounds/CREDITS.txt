@@ -2,5 +2,8 @@ Sound effects: "Digital Audio" pack by Kenney Vleugels (kenney.nl)
 License: CC0 1.0 Universal (public domain) — https://creativecommons.org/publicdomain/zero/1.0/
 Credit is appreciated but not required.
 
-eat.ogg       <- Audio/pepSound1.ogg
-game-over.ogg <- Audio/lowDown.ogg
+eat.ogg        <- Audio/pepSound1.ogg
+game-over.ogg  <- Audio/lowDown.ogg
+shoot.ogg      <- Audio/laser1.ogg
+hit.ogg        <- Audio/zap1.ogg
+wave-clear.ogg <- Audio/powerUp1.ogg

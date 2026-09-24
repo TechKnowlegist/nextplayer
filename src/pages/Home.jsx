@@ -3,9 +3,9 @@ import { useControllerStatus } from '../engine/useController';
 
 const GAMES = [
   { id: 'snake', title: 'Snake', emoji: '🐍', tag: 'Play now', path: '/games/snake', blurb: "The classic. Eat, grow, and don't bite yourself." },
-  { id: 'racer', title: 'Drift Racer', emoji: '🏎️', tag: 'Coming soon', blurb: 'Top-down laps, drifting, and boost. Built for triggers.' },
-  { id: 'chomper', title: 'Maze Chomper', emoji: '👾', tag: 'Coming soon', blurb: 'Eat every dot. Dodge every ghost.' },
-  { id: 'shooter', title: 'Star Blaster', emoji: '🚀', tag: 'Coming soon', blurb: 'Wave after wave of arcade space combat.' },
+  { id: 'racer', title: 'Drift Racer', emoji: '🏎️', tag: 'Play now', path: '/games/drift-racer', blurb: 'Top-down laps, drifting, and boost. Built for triggers.' },
+  { id: 'chomper', title: 'Maze Chomper', emoji: '👾', tag: 'Play now', path: '/games/maze-chomper', blurb: 'Eat every dot. Dodge every ghost.' },
+  { id: 'shooter', title: 'Star Blaster', emoji: '🚀', tag: 'Play now', path: '/games/star-blaster', blurb: 'Wave after wave of arcade space combat.' },
 ];
 
 export default function Home() {

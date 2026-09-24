@@ -5,6 +5,9 @@
 const SOUNDS = {
   eat: '/sounds/eat.ogg',
   gameOver: '/sounds/game-over.ogg',
+  shoot: '/sounds/shoot.ogg',
+  hit: '/sounds/hit.ogg',
+  waveClear: '/sounds/wave-clear.ogg',
 };
 
 const MUTE_KEY = 'np-sound-muted';

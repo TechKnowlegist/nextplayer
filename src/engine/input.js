@@ -228,19 +228,37 @@ function start() {
 }
 
 // Rumble! Works in Chromium browsers (Chrome, Edge, Opera GX) on most setups.
+// Support for DualSense specifically is known to be inconsistent across
+// Chrome versions/OSes and especially over Bluetooth vs a wired USB-C
+// connection — if this still doesn't work after the fixes below, that's
+// most likely a browser/OS limitation rather than something fixable here.
 export function rumble({ strong = 0.5, weak = 0.5, duration = 150 } = {}) {
   const pad = findPad();
-  const actuator = pad && pad.vibrationActuator;
-  if (!actuator || !actuator.playEffect) return false;
+  if (!pad) {
+    console.log('Nextplayer — rumble: no controller detected');
+    return false;
+  }
+  const actuator = pad.vibrationActuator;
+  if (!actuator) {
+    console.log('Nextplayer — rumble: this controller/browser has no vibrationActuator', pad.id);
+    return false;
+  }
+  if (!actuator.playEffect) {
+    console.log('Nextplayer — rumble: vibrationActuator has no playEffect()', actuator);
+    return false;
+  }
+  // Some browsers report the actuator's own supported type instead of
+  // always being 'dual-rumble' — prefer that when present.
+  const effectType = actuator.type || 'dual-rumble';
   try {
     actuator
-      .playEffect('dual-rumble', {
+      .playEffect(effectType, {
         startDelay: 0,
         duration,
         strongMagnitude: strong,
         weakMagnitude: weak,
       })
-      .catch(() => {});
+      .catch((err) => console.log('Nextplayer — rumble: playEffect rejected', err));
     return true;
   } catch {
     return false;
