@@ -1,40 +1,69 @@
+/* ---- Next Player base styles (same family as Nextlayer) ---- */
 :root {
   --accent-1: #22c55e;
   --accent-2: #38bdf8;
-  --bg: #0a120d;
-  --text: #f1f5f4;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-
-  font: 16px/1.5 var(--sans);
+  --heading-1: #3b82f6;
+  --heading-2: #a855f7;
+  --panel: #0f172a;
+  --surface: #0a0f1c;
+  --line: rgba(255, 255, 255, 0.08);
   color-scheme: dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
-  background: var(--bg);
+  background: #000000;
+  color: white;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 #root {
-  min-height: 100svh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-h1, h2 {
-  font-family: var(--sans);
-  font-weight: 700;
+::selection {
+  background: rgba(45, 193, 171, 0.5);
+  color: #ffffff;
+}
+
+h1,
+h2,
+h3 {
   margin: 0;
+}
+
+/* Same global gradients as Nextlayer: headings blue→purple, text green→blue */
+h1,
+h2 {
+  background: linear-gradient(90deg, var(--heading-1), var(--heading-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 p {
   margin: 0;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+a {
+  color: inherit;
 }
