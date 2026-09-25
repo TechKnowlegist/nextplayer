@@ -35,9 +35,11 @@ export default function Home() {
           <Link to="/help" className="np-btn np-btn-secondary">How to play</Link>
           <Link to="/controller" className="np-btn np-btn-secondary">Test your controller</Link>
         </div>
-        {connected && (
-          <div className="np-hero-other">you can also play on you're Nintendo switch on the dns browser But it is not reliable.</div>
-        )}
+        <div className="np-hero-hint">
+          Joy-Cons or a Pro Controller work great if connected to your computer. Playing directly in the
+          Switch's own browser hasn't been tested yet.
+        </div>
+        {connected && <div className="np-hero-hint">D-pad to move · ✕ to select · ○ to go back</div>}
       </section>
 
       {recent.length > 0 && (
