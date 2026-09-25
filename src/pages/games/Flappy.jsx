@@ -48,6 +48,15 @@ export default function Flappy() {
     setGameOver(false);
   }
 
+  // Lets touch (and mouse) players tap the canvas itself to flap, instead of
+  // needing the on-screen ✕ button specifically — feels natural on mobile.
+  function handleTap(e) {
+    e.preventDefault();
+    const s = stateRef.current;
+    if (!s.alive) return;
+    s.tapFlap = true;
+  }
+
   function endGame(s) {
     s.alive = false;
     setGameOver(true);
@@ -96,8 +105,9 @@ export default function Flappy() {
       return;
     }
 
-    if (b.cross.justPressed || b.up.justPressed) {
+    if (b.cross.justPressed || b.up.justPressed || s.tapFlap) {
       s.vy = FLAP_VY;
+      s.tapFlap = false;
     }
     s.vy += GRAVITY * delta;
     s.birdY += s.vy * delta;
@@ -139,7 +149,13 @@ export default function Flappy() {
       </div>
 
       <div className="np-snake-wrap">
-        <canvas ref={canvasRef} width={W} height={H} className="np-snake-canvas" />
+        <canvas
+          ref={canvasRef}
+          width={W}
+          height={H}
+          className="np-snake-canvas"
+          onPointerDown={handleTap}
+        />
         {gameOver && (
           <div className="np-snake-overlay">
             <h2>Game Over</h2>

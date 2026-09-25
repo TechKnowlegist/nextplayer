@@ -71,6 +71,10 @@ const state = {
 export const settings = { menuNav: true };
 
 const keysDown = new Set();
+// On-screen touch controls set/clear button names here directly (no keymap
+// layer needed — a virtual "cross" button already IS named "cross"). Kept
+// separate from keysDown since touch has no keyCode to track.
+const touchButtons = new Set();
 const frameListeners = new Set();
 const statusListeners = new Set();
 let padIndex = null;
@@ -171,7 +175,8 @@ function poll() {
     }
     if (padValue > PRESS_THRESHOLD) padActive = true;
     setButton(state.pad.buttons[name], padValue);
-    setButton(state.buttons[name], Math.max(padValue, keyHeld(name) ? 1 : 0));
+    const touchValue = touchButtons.has(name) ? 1 : 0;
+    setButton(state.buttons[name], Math.max(padValue, keyHeld(name) ? 1 : 0, touchValue));
   }
 
   // Sticks (up on a stick is negative Y)
@@ -196,6 +201,7 @@ function poll() {
 
   if (padActive) state.lastInput = 'controller';
   else if (keysDown.size) state.lastInput = 'keyboard';
+  else if (touchButtons.size) state.lastInput = 'touch';
 
   state.connected = !!pad;
   state.name = pad ? friendlyName(pad.id) : '';
@@ -288,6 +294,13 @@ export const input = {
   // Games call captureKeyboard(true) so arrow keys/space don't scroll the page
   captureKeyboard(on) {
     captureKeys = on;
+  },
+  // On-screen touch controls call these on pointerdown/pointerup. `name`
+  // is a button name from BUTTONS (e.g. 'cross', 'up') — same names
+  // keyboard and gamepad already use, so no separate touch keymap exists.
+  setTouchButton(name, on) {
+    if (on) touchButtons.add(name);
+    else touchButtons.delete(name);
   },
 };
 

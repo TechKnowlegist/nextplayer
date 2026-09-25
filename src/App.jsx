@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './AuthContext.jsx';
 import ControllerNavigator from './engine/ControllerNavigator';
+import { useIsTouchDevice } from './engine/useController';
 import NavBar from './components/NavBar';
+import TouchControls from './components/TouchControls';
 import Home from './pages/Home';
 import ControllerTest from './pages/ControllerTest';
 import Account from './pages/Account';
@@ -21,6 +23,15 @@ import Game2048 from './pages/games/Game2048';
 import MemoryMatch from './pages/games/MemoryMatch';
 import NotFound from './pages/NotFound';
 import './App.css';
+
+// Only shows on touch devices, and only on an actual game page — the
+// home page, account, and controller-test pages don't need it.
+function TouchControlsGate() {
+  const isTouch = useIsTouchDevice();
+  const { pathname } = useLocation();
+  if (!isTouch || !pathname.startsWith('/games/')) return null;
+  return <TouchControls thrust={pathname === '/games/asteroids'} />;
+}
 
 export default function App() {
   return (
@@ -49,6 +60,7 @@ export default function App() {
           {/* Anything that doesn't match a page above lands on the 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <TouchControlsGate />
         <footer className="np-footer">© 2026 Next Player</footer>
       </BrowserRouter>
     </AuthProvider>

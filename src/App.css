@@ -1154,3 +1154,93 @@
   background: rgba(34, 197, 94, 0.15);
   border-color: rgba(34, 197, 94, 0.4);
 }
+
+/* ---- On-screen touch controls (phones/tablets only, see useIsTouchDevice) ---- */
+.np-touch-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none; /* only the buttons themselves should catch touches */
+}
+
+.np-touch-dpad,
+.np-touch-actions {
+  pointer-events: auto;
+}
+
+.np-touch-dpad {
+  display: grid;
+  grid-template-columns: 54px 54px 54px;
+  grid-template-rows: 54px 54px 54px;
+  gap: 4px;
+}
+
+.np-touch-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.np-touch-btn {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+
+.np-touch-btn:active {
+  background: rgba(56, 189, 248, 0.35);
+  border-color: var(--accent-2);
+}
+
+.np-touch-dpad .up { grid-column: 2; grid-row: 1; }
+.np-touch-dpad .left { grid-column: 1; grid-row: 2; }
+.np-touch-dpad .right { grid-column: 3; grid-row: 2; }
+.np-touch-dpad .down { grid-column: 2; grid-row: 3; }
+
+.np-touch-actions .np-touch-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.np-touch-cross {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #0a120d;
+  border-color: transparent;
+}
+
+.np-touch-thrust {
+  align-self: flex-start;
+}
+
+/* The hint text below every game names keyboard/gamepad controls (arrow
+   keys, WASD, R2...) that don't apply once on-screen touch controls are
+   showing — hide it rather than leave confusing, irrelevant instructions. */
+body:has(.np-touch-controls) .np-snake-controls {
+  display: none;
+}
+
+/* padding-bottom on .np-page only adds scrollable space after the page's
+   content — it does nothing to move content that's already within the
+   viewport out from under the fixed-position touch overlay. Push the
+   actual bottom of the game canvas up instead, since .np-snake-wrap is
+   the shared wrapper every game's canvas/board sits in. */
+body:has(.np-touch-controls) .np-snake-wrap {
+  margin-bottom: 170px;
+}

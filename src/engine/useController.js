@@ -28,3 +28,21 @@ export function useMenuNav(enabled) {
     };
   }, [enabled]);
 }
+
+// True on touch-primary devices (phones/tablets) — checks the actual
+// pointer type, not screen width, so a touch laptop with a keyboard
+// doesn't get on-screen controls and a narrow desktop window doesn't
+// fake having them either.
+export function useIsTouchDevice() {
+  const [isTouch, setIsTouch] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(pointer: coarse)');
+    const onChange = () => setIsTouch(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return isTouch;
+}
