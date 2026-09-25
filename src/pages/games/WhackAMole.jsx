@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const GRID = 3;
 const ROUND_MS = 30000;
@@ -36,6 +39,8 @@ export default function WhackAMole() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [timeLeft, setTimeLeft] = useState(ROUND_MS);
   const [gameOver, setGameOver] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('whack-a-mole');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -102,6 +107,8 @@ export default function WhackAMole() {
         return next;
       });
       play('gameOver');
+      submitScore(s.score);
+      setBoardVersion((v) => v + 1);
     }
     setTimeLeft(Math.ceil(s.timeLeft / 100) * 100);
   });
@@ -145,6 +152,9 @@ export default function WhackAMole() {
       </div>
 
       <p className="np-snake-controls">D-pad / stick to move the cursor · ✕ to whack</p>
+
+      <Leaderboard gameId="whack-a-mole" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:whack-a-mole" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

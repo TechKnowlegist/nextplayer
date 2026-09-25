@@ -12,6 +12,15 @@
 //
 // If Nextlayer3D's sandbox is ever fully torn down and recreated (not
 // just redeployed), these IDs will change and need updating here.
+//
+// The `API.GraphQL` block below points at that same backend's AppSync API
+// (for arcade leaderboards + chat — see ArcadeScore/ArcadeMessage in
+// Tasker/Nextlayer3D's amplify/data/resource.ts). Same non-secret-values
+// rule applies: this URL/region is exactly what ships in Nextlayer3D's own
+// committed amplify_outputs.json. Reads use `identityPool` auth (the
+// Cognito Identity Pool's guest role) so signed-out visitors can still see
+// scores and chat; writes use `userPool` auth and require sign-in — see
+// arcadeApi.js.
 export const amplifyConfig = {
   Auth: {
     Cognito: {
@@ -21,6 +30,13 @@ export const amplifyConfig = {
       loginWith: {
         email: true,
       },
+    },
+  },
+  API: {
+    GraphQL: {
+      endpoint: 'https://lrug6qpknrb7hhdho5x3gypiuq.appsync-api.us-east-1.amazonaws.com/graphql',
+      region: 'us-east-1',
+      defaultAuthMode: 'identityPool',
     },
   },
 }

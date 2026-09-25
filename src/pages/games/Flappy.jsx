@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const W = 400;
 const H = 560;
@@ -36,6 +39,8 @@ export default function Flappy() {
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('flappy');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -67,6 +72,8 @@ export default function Flappy() {
     });
     play('gameOver');
     input.rumble({ strong: 0.6, weak: 0.6, duration: 200 });
+    submitScore(s.score);
+    setBoardVersion((v) => v + 1);
   }
 
   function draw(s) {
@@ -170,6 +177,9 @@ export default function Flappy() {
       </div>
 
       <p className="np-snake-controls">✕ or Up to flap</p>
+
+      <Leaderboard gameId="flappy" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:flappy" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const W = 440;
 const H = 520;
@@ -52,6 +55,8 @@ export default function Breakout() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('breakout');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -77,6 +82,8 @@ export default function Breakout() {
     });
     play(didWin ? 'waveClear' : 'gameOver');
     if (!didWin) input.rumble({ strong: 0.7, weak: 0.7, duration: 300 });
+    submitScore(s.score);
+    setBoardVersion((v) => v + 1);
   }
 
   function draw(s) {
@@ -211,6 +218,9 @@ export default function Breakout() {
       </div>
 
       <p className="np-snake-controls">Left/right or stick to move the paddle</p>
+
+      <Leaderboard gameId="breakout" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:breakout" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

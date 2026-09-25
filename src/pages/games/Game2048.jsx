@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const SIZE = 4;
 const BEST_KEY = 'np-2048-best';
@@ -97,6 +100,8 @@ export default function Game2048() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('2048');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -127,9 +132,13 @@ export default function Game2048() {
       if (withNew.some((row) => row.some((v) => v >= 2048))) {
         setWon(true);
         play('waveClear');
+        submitScore(newScore);
+        setBoardVersion((v) => v + 1);
       } else if (noMovesLeft(withNew)) {
         setGameOver(true);
         play('gameOver');
+        submitScore(newScore);
+        setBoardVersion((v) => v + 1);
       }
       return withNew;
     });
@@ -189,6 +198,9 @@ export default function Game2048() {
       </div>
 
       <p className="np-snake-controls">D-pad / stick / arrow keys / WASD to slide the tiles</p>
+
+      <Leaderboard gameId="2048" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:2048" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

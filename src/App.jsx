@@ -5,6 +5,8 @@ import { useIsTouchDevice } from './engine/useController';
 import NavBar from './components/NavBar';
 import TouchControls from './components/TouchControls';
 import Home from './pages/Home';
+import Help from './pages/Help';
+import Chat from './pages/Chat';
 import ControllerTest from './pages/ControllerTest';
 import Account from './pages/Account';
 import Snake from './pages/games/Snake';
@@ -41,6 +43,8 @@ export default function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="/controller" element={<ControllerTest />} />
           <Route path="/account" element={<Account />} />
           <Route path="/games/snake" element={<Snake />} />

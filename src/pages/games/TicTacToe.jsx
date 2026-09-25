@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const LINES = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -43,6 +46,10 @@ export default function TicTacToe() {
   const [turn, setTurn] = useState('player'); // 'player' | 'ai'
   const [winner, setWinner] = useState(null); // 'X' | 'O' | 'draw' | null
   const [wins, setWins] = useState({ player: 0, ai: 0 });
+  const [boardVersion, setBoardVersion] = useState(0);
+  // Leaderboard tracks the most wins in a single visit — a single match's
+  // result (win/lose/draw) isn't a "score" the way it is in the other games.
+  const submitScore = useSubmitScore('tic-tac-toe');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -104,6 +111,8 @@ export default function TicTacToe() {
           setWinner(w);
           setWins((wv) => ({ ...wv, player: wv.player + 1 }));
           play('waveClear');
+          submitScore(wins.player + 1);
+          setBoardVersion((v) => v + 1);
         } else if (next.every(Boolean)) {
           setWinner('draw');
         } else {
@@ -150,6 +159,9 @@ export default function TicTacToe() {
       </div>
 
       <p className="np-snake-controls">D-pad to move the cursor · ✕ to place</p>
+
+      <Leaderboard gameId="tic-tac-toe" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:tic-tac-toe" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

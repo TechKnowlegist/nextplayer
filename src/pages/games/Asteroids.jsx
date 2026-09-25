@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const W = 480;
 const H = 480;
@@ -76,6 +79,8 @@ export default function Asteroids() {
   const [wave, setWave] = useState(1);
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('asteroids');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -100,6 +105,8 @@ export default function Asteroids() {
     });
     play('gameOver');
     input.rumble({ strong: 0.8, weak: 0.8, duration: 350 });
+    submitScore(s.score);
+    setBoardVersion((v) => v + 1);
   }
 
   function draw(s) {
@@ -281,6 +288,9 @@ export default function Asteroids() {
       </div>
 
       <p className="np-snake-controls">Left/right to turn · Up or R2 to thrust · ✕ to fire</p>
+
+      <Leaderboard gameId="asteroids" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:asteroids" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

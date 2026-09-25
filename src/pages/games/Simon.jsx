@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const DIRS = ['up', 'right', 'down', 'left'];
 const FLASH_MS = 450;
@@ -30,6 +33,8 @@ export default function Simon() {
   const [gameOver, setGameOver] = useState(false);
   const [flashDir, setFlashDir] = useState(null);
   const [phase, setPhase] = useState('watching');
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('simon');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -54,6 +59,8 @@ export default function Simon() {
     });
     play('gameOver');
     input.rumble({ strong: 0.6, weak: 0.6, duration: 200 });
+    submitScore(s.sequence.length - 1);
+    setBoardVersion((v) => v + 1);
   }
 
   useControllerFrame((state, time) => {
@@ -152,6 +159,9 @@ export default function Simon() {
       </div>
 
       <p className="np-snake-controls">Watch the pattern, then repeat it with the D-pad / arrow keys</p>
+
+      <Leaderboard gameId="simon" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:simon" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const CANVAS_W = 420;
 const CANVAS_H = 560;
@@ -61,6 +64,8 @@ export default function StarBlaster() {
   const [wave, setWave] = useState(1);
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('star-blaster');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -85,6 +90,8 @@ export default function StarBlaster() {
     });
     play('gameOver');
     input.rumble({ strong: 0.7, weak: 0.7, duration: 300 });
+    submitScore(s.score);
+    setBoardVersion((v) => v + 1);
   }
 
   function draw(s) {
@@ -243,6 +250,9 @@ export default function StarBlaster() {
       </div>
 
       <p className="np-snake-controls">Left/right or stick to move · ✕ or R2 to fire</p>
+
+      <Leaderboard gameId="star-blaster" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:star-blaster" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

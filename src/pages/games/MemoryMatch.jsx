@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
+
+const formatMoves = (n) => `${n} move${n === 1 ? '' : 's'}`;
 
 const SYMBOLS = ['🐍', '🏎️', '👾', '🚀', '🎮', '⭐', '🔥', '💎'];
 const COLS = 4;
@@ -28,6 +33,8 @@ export default function MemoryMatch() {
   const [moves, setMoves] = useState(0);
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || null);
   const [won, setWon] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('memory-match');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -58,6 +65,8 @@ export default function MemoryMatch() {
               localStorage.setItem(BEST_KEY, String(nextBest));
               return nextBest;
             });
+            submitScore(moves + 1);
+            setBoardVersion((v) => v + 1);
           } else {
             play('eat');
           }
@@ -67,7 +76,7 @@ export default function MemoryMatch() {
       setFlipped([]);
     }, 700);
     return () => clearTimeout(t);
-  }, [flipped, deck, moves]);
+  }, [flipped, deck, moves, submitScore]);
 
   useControllerFrame((state) => {
     const b = state.buttons;
@@ -129,6 +138,9 @@ export default function MemoryMatch() {
       </div>
 
       <p className="np-snake-controls">D-pad to move the cursor · ✕ to flip a card</p>
+
+      <Leaderboard gameId="memory-match" refreshKey={boardVersion} ascending format={formatMoves} />
+      <ChatFeed channel="leaderboard:memory-match" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

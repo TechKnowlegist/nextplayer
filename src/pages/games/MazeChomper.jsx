@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const CELL = 26;
 const MW = 7; // maze width in cells
@@ -156,6 +159,8 @@ export default function MazeChomper() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [ready, setReady] = useState(true);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('maze-chomper');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -184,6 +189,8 @@ export default function MazeChomper() {
       play('gameOver');
       input.rumble({ strong: 0.7, weak: 0.7, duration: 300 });
     }
+    submitScore(s.score);
+    setBoardVersion((v) => v + 1);
   }
 
   function tick(s) {
@@ -359,6 +366,9 @@ export default function MazeChomper() {
       </div>
 
       <p className="np-snake-controls">D-pad / left stick / arrow keys / WASD — grab the big dots to turn the tables</p>
+
+      <Leaderboard gameId="maze-chomper" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:maze-chomper" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

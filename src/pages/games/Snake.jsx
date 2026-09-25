@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play, isMuted, toggleMuted } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const GRID = 20;
 const CELL = 20;
@@ -41,6 +44,8 @@ export default function Snake() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
   const [muted, setMuted] = useState(isMuted);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('snake');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -63,6 +68,8 @@ export default function Snake() {
     });
     input.rumble({ strong: 0.7, weak: 0.7, duration: 300 });
     play('gameOver');
+    submitScore(s.score);
+    setBoardVersion((v) => v + 1);
   }
 
   function tick(s) {
@@ -186,6 +193,9 @@ export default function Snake() {
       </div>
 
       <p className="np-snake-controls">D-pad / left stick / arrow keys / WASD to move</p>
+
+      <Leaderboard gameId="snake" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:snake" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const W = 480;
 const H = 320;
@@ -35,6 +38,10 @@ export default function Pong() {
   const [aiScore, setAiScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
+  const [boardVersion, setBoardVersion] = useState(0);
+  // Leaderboard tracks winning margin, not raw score — a win always ends at
+  // WIN_SCORE, so the margin (7-0 vs. 7-6) is the only number that varies.
+  const submitScore = useSubmitScore('pong');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -152,6 +159,8 @@ export default function Pong() {
       if (s.playerScore >= WIN_SCORE) {
         s.alive = false;
         setWon(true);
+        submitScore(s.playerScore - s.aiScore);
+        setBoardVersion((v) => v + 1);
       } else serve(s, true);
     }
 
@@ -186,6 +195,9 @@ export default function Pong() {
       </div>
 
       <p className="np-snake-controls">Up/Down or left stick — first to {WIN_SCORE} wins</p>
+
+      <Leaderboard gameId="pong" refreshKey={boardVersion} />
+      <ChatFeed channel="leaderboard:pong" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }

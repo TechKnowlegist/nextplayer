@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useSubmitScore } from '../../engine/useSubmitScore';
+import Leaderboard from '../../components/Leaderboard';
+import ChatFeed from '../../components/ChatFeed';
 
 const CANVAS_SIZE = 480;
 const CENTER = CANVAS_SIZE / 2;
@@ -56,6 +59,8 @@ export default function DriftRacer() {
   const [lap, setLap] = useState(0);
   const [lastLapTime, setLastLapTime] = useState(null);
   const [bestLapTime, setBestLapTime] = useState(() => Number(localStorage.getItem(BEST_KEY)) || null);
+  const [boardVersion, setBoardVersion] = useState(0);
+  const submitScore = useSubmitScore('drift-racer');
 
   useEffect(() => {
     input.captureKeyboard(true);
@@ -186,6 +191,8 @@ export default function DriftRacer() {
         s.bestLapTime = lapTime;
         localStorage.setItem(BEST_KEY, String(lapTime));
         setBestLapTime(lapTime);
+        submitScore(lapTime);
+        setBoardVersion((v) => v + 1);
       }
     } else if (s.angleAccum <= -Math.PI * 2) {
       // driving backward a full lap — just resync so it doesn't wrap oddly
@@ -226,6 +233,9 @@ export default function DriftRacer() {
       <p className="np-snake-controls">
         R2/L2 or Up/Down or left stick to accelerate/brake · Left/Right or stick to steer
       </p>
+
+      <Leaderboard gameId="drift-racer" refreshKey={boardVersion} ascending format={fmt} />
+      <ChatFeed channel="leaderboard:drift-racer" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
     </main>
   );
 }
