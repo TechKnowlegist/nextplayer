@@ -1,9 +1,18 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useControllerStatus } from '../engine/useController';
 import { GAMES } from '../gamesData';
+import { getRecentlyPlayed } from '../engine/recentlyPlayed';
 
 export default function Home() {
   const { connected } = useControllerStatus();
+  // Lazy-init reads localStorage fresh on every mount, which is exactly
+  // when this matters — coming back to Home after playing something.
+  const [recent] = useState(() =>
+    getRecentlyPlayed()
+      .map((id) => GAMES.find((g) => g.id === id))
+      .filter(Boolean)
+  );
 
   return (
     <main className="np-page">
@@ -30,6 +39,22 @@ export default function Home() {
           <div className="np-hero-hint">D-pad to move · ✕ to select · ○ to go back</div>
         )}
       </section>
+
+      {recent.length > 0 && (
+        <section className="np-games np-continue">
+          <h2>Continue Playing</h2>
+          <div className="np-game-grid np-continue-grid">
+            {recent.map((game) => (
+              <Link key={game.id} to={game.path} className="np-game-card np-continue-card">
+                <div className="np-game-art" aria-hidden="true">{game.emoji}</div>
+                <div className="np-game-info">
+                  <h3>{game.title}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section id="games" className="np-games">
         <h2>Games</h2>

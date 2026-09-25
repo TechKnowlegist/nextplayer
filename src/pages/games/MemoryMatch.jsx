@@ -3,11 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { formatMoves } from '../../engine/scoreFormat';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
-
-const formatMoves = (n) => `${n} move${n === 1 ? '' : 's'}`;
 
 const SYMBOLS = ['🐍', '🏎️', '👾', '🚀', '🎮', '⭐', '🔥', '💎'];
 const COLS = 4;

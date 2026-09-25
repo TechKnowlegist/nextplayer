@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { formatLapTime as fmt } from '../../engine/scoreFormat';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 
@@ -201,14 +202,6 @@ export default function DriftRacer() {
 
     draw(s);
   });
-
-  function fmt(ms) {
-    if (ms == null) return '--:--.--';
-    const totalSeconds = ms / 1000;
-    const m = Math.floor(totalSeconds / 60);
-    const sec = (totalSeconds % 60).toFixed(2).padStart(5, '0');
-    return `${m}:${sec}`;
-  }
 
   return (
     <main className="np-page np-snake">

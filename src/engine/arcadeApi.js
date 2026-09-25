@@ -26,7 +26,7 @@ export function displayNameFor(email) {
 const LIST_SCORES = /* GraphQL */ `
   query ListArcadeScores($filter: ModelArcadeScoreFilterInput, $limit: Int) {
     listArcadeScores(filter: $filter, limit: $limit) {
-      items { id gameId score playerName createdAt }
+      items { id gameId score playerName authorEmail createdAt }
     }
   }
 `;
@@ -48,6 +48,14 @@ const LIST_MESSAGES = /* GraphQL */ `
 const CREATE_MESSAGE = /* GraphQL */ `
   mutation CreateArcadeMessage($input: CreateArcadeMessageInput!) {
     createArcadeMessage(input: $input) { id channel text authorName createdAt }
+  }
+`;
+
+const LIST_MY_SCORES = /* GraphQL */ `
+  query ListMyArcadeScores($filter: ModelArcadeScoreFilterInput, $limit: Int) {
+    listArcadeScores(filter: $filter, limit: $limit) {
+      items { id gameId score createdAt }
+    }
   }
 `;
 
@@ -96,4 +104,16 @@ export async function postMessage(channel, text, authorName, authorEmail) {
     authMode: WRITE_AUTH,
   });
   return res.data?.createArcadeMessage;
+}
+
+// Every score a signed-in player has ever submitted, across every game —
+// powers the Profile page's per-game bests and achievement badges.
+export async function listMyScores(email) {
+  if (!email) return [];
+  const res = await client.graphql({
+    query: LIST_MY_SCORES,
+    variables: { filter: { authorEmail: { eq: email } }, limit: 500 },
+    authMode: READ_AUTH,
+  });
+  return res.data?.listArcadeScores?.items || [];
 }

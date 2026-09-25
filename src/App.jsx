@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './AuthContext.jsx';
 import ControllerNavigator from './engine/ControllerNavigator';
 import { useIsTouchDevice } from './engine/useController';
+import { recordPlayed } from './engine/recentlyPlayed';
+import { gameBySlug } from './gamesData';
 import NavBar from './components/NavBar';
 import TouchControls from './components/TouchControls';
 import Home from './pages/Home';
@@ -35,11 +38,24 @@ function TouchControlsGate() {
   return <TouchControls thrust={pathname === '/games/asteroids'} />;
 }
 
+// Records every game page visited to localStorage so Home's "Continue
+// Playing" row can show it — works for guests too, no sign-in involved.
+function RecentlyPlayedTracker() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (!pathname.startsWith('/games/')) return;
+    const game = gameBySlug(pathname.slice('/games/'.length));
+    if (game) recordPlayed(game.id);
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <ControllerNavigator />
+        <RecentlyPlayedTracker />
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />

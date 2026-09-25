@@ -1,3 +1,5 @@
+import { formatLapTime, formatMoves } from './engine/scoreFormat';
+
 // Shared game catalog — one source of truth for the home page grid and the
 // Help page, so a new game (or a controls change) only needs updating here.
 export const GAMES = [
@@ -20,6 +22,9 @@ export const GAMES = [
     blurb: 'Top-down laps, drifting, and boost. Built for triggers.',
     goal: 'Race laps around the ring track as fast as you can — hold your line through the corners.',
     controls: 'R2/L2 or Up/Down or left stick to accelerate/brake · Left/Right or stick to steer',
+    // Lower lap time is the better result — see Leaderboard's `ascending` prop.
+    rankAscending: true,
+    format: formatLapTime,
   },
   {
     id: 'chomper',
@@ -140,5 +145,15 @@ export const GAMES = [
     blurb: 'Flip two, find the pairs, beat your best move count.',
     goal: 'Flip two cards at a time to find every matching pair, in as few moves as possible.',
     controls: 'D-pad to move the cursor · ✕ to flip a card',
+    // Fewer moves is the better result — see Leaderboard's `ascending` prop.
+    rankAscending: true,
+    format: formatMoves,
   },
 ];
+
+// A game's slug as stored in ArcadeScore.gameId (and used in its route) is
+// the last segment of `path`, e.g. '/games/drift-racer' -> 'drift-racer' —
+// not the same as this catalog's own `id` (kept short for React keys).
+export function gameBySlug(slug) {
+  return GAMES.find((g) => g.path === `/games/${slug}`);
+}

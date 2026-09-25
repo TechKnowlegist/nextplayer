@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../AuthContext.jsx';
 import { useMenuNav } from '../engine/useController';
+import ProfileStats from '../components/ProfileStats';
 
 export default function Account() {
   useMenuNav(false); // typing in the form shouldn't fight the D-pad menu nav
@@ -28,6 +29,9 @@ export default function Account() {
         <button className="np-btn np-btn-secondary" onClick={logout}>
           Sign Out
         </button>
+
+        <h2 className="np-profile-heading">Your Stats</h2>
+        <ProfileStats email={user.email} />
       </main>
     );
   }
