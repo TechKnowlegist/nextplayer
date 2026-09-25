@@ -23,12 +23,12 @@ export default function Home() {
           ))}
         </div>
         <h1 className="np-hero-title">
-          Grab a controller.
-          <br />
+          Grab a controller            <br />
           <span className="np-accent">Pick a game.</span>
         </h1>
         <p className="np-hero-sub">
-          Free arcade games that play right in your browser, built controller-first for DualSense, Xbox, and keyboard.
+          Free arcade games that play right in your browser, optimized for DualSense, Xbox, keyboard and mobile.
+          
         </p>
         <div className="np-hero-buttons">
           <a href="#games" className="np-btn np-btn-primary">Browse games</a>
@@ -36,7 +36,7 @@ export default function Home() {
           <Link to="/controller" className="np-btn np-btn-secondary">Test your controller</Link>
         </div>
         {connected && (
-          <div className="np-hero-hint">D-pad to move · ✕ to select · ○ to go back</div>
+          <div className="np-hero-other">you can also play on you're Nintendo switch on the dns browser But it is not reliable.</div>
         )}
       </section>
 
