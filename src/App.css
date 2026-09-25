@@ -1628,3 +1628,51 @@ body:has(.np-touch-controls) .np-snake-wrap {
 .np-chat-page-sub {
   margin-bottom: 20px;
 }
+
+/* ---- Leaderboards hub page ---- */
+.np-leaderboards-sub {
+  max-width: 640px;
+  margin-bottom: 24px;
+}
+
+.np-leaderboards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.np-leaderboards-card {
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.np-leaderboards-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.np-leaderboards-card-top h3 {
+  flex: 1;
+  font-size: 1.05rem;
+}
+
+.np-leaderboards-play {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+}
+
+/* The nested Leaderboard already renders its own box for the game-page
+   case — strip that chrome here so it blends into .np-leaderboards-card
+   instead of nesting two bordered boxes. */
+.np-leaderboards-card .np-leaderboard {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 0;
+}

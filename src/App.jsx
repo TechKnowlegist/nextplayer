@@ -9,6 +9,7 @@ import NavBar from './components/NavBar';
 import TouchControls from './components/TouchControls';
 import Home from './pages/Home';
 import Help from './pages/Help';
+import Leaderboards from './pages/Leaderboards';
 import Chat from './pages/Chat';
 import ControllerTest from './pages/ControllerTest';
 import Account from './pages/Account';
@@ -60,6 +61,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/leaderboards" element={<Leaderboards />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/controller" element={<ControllerTest />} />
           <Route path="/account" element={<Account />} />

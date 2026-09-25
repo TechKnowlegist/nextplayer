@@ -28,6 +28,7 @@ export default function NavBar() {
       <div className="np-links">
         <NavLink to="/" end>Games</NavLink>
         <NavLink to="/help">How to Play</NavLink>
+        <NavLink to="/leaderboards">Leaderboards</NavLink>
         <NavLink to="/chat">Chat</NavLink>
         <NavLink to="/controller">Controller</NavLink>
       </div>

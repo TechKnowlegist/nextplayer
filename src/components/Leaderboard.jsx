@@ -5,8 +5,17 @@ import { listTopScores } from '../engine/arcadeApi';
 // the player's own score was just submitted) without a full page reload.
 // `ascending` + `format` are for time-based games like Drift Racer, where a
 // LOWER stored value is the better result and it should render as a lap
-// time (e.g. "1:23.45") instead of a raw number.
-export default function Leaderboard({ gameId, refreshKey, ascending = false, format }) {
+// time (e.g. "1:23.45") instead of a raw number. `limit` shrinks the list
+// (the Leaderboards hub page shows a top-5 per game); `showHeading` hides
+// the built-in "Leaderboard" title when a parent already labels the card.
+export default function Leaderboard({
+  gameId,
+  refreshKey,
+  ascending = false,
+  format,
+  limit = 10,
+  showHeading = true,
+}) {
   // A single status field instead of separate scores/failed booleans — every
   // update happens from inside the fetch's own callbacks (never
   // synchronously in the effect body), so a stale result never overwrites a
@@ -15,7 +24,7 @@ export default function Leaderboard({ gameId, refreshKey, ascending = false, for
 
   useEffect(() => {
     let cancelled = false;
-    listTopScores(gameId, 10, ascending)
+    listTopScores(gameId, limit, ascending)
       .then((items) => {
         if (!cancelled) setResult({ status: 'ok', scores: items });
       })
@@ -26,14 +35,14 @@ export default function Leaderboard({ gameId, refreshKey, ascending = false, for
     return () => {
       cancelled = true;
     };
-  }, [gameId, refreshKey, ascending]);
+  }, [gameId, refreshKey, ascending, limit]);
 
   const { status, scores } = result;
   const failed = status === 'error';
 
   return (
     <div className="np-leaderboard">
-      <h3>Leaderboard</h3>
+      {showHeading && <h3>Leaderboard</h3>}
       {failed && <p className="np-leaderboard-empty">Couldn't load the leaderboard right now.</p>}
       {status === 'loading' && <p className="np-leaderboard-empty">Loading...</p>}
       {!failed && scores && scores.length === 0 && (
