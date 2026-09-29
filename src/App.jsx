@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './AuthContext.jsx';
+import BootScreen from './components/BootScreen';
 import ControllerNavigator from './engine/ControllerNavigator';
 import { useIsTouchDevice } from './engine/useController';
 import { recordPlayed } from './engine/recentlyPlayed';
@@ -51,7 +52,35 @@ function RecentlyPlayedTracker() {
   return null;
 }
 
+const BOOT_KEY = 'np-booted';
+
 export default function App() {
+  // Plays once per tab (sessionStorage, not localStorage) - reopening a
+  // fresh tab boots again, like turning the console back on, but
+  // navigating around inside the same tab doesn't replay it.
+  const [booted, setBooted] = useState(() => {
+    try {
+      return sessionStorage.getItem(BOOT_KEY) === 'true';
+    } catch {
+      return true; // private browsing / storage blocked - don't get stuck on the boot screen
+    }
+  });
+
+  if (!booted) {
+    return (
+      <BootScreen
+        onDone={() => {
+          try {
+            sessionStorage.setItem(BOOT_KEY, 'true');
+          } catch {
+            // ignore - worst case it boots again next navigation
+          }
+          setBooted(true);
+        }}
+      />
+    );
+  }
+
   return (
     <AuthProvider>
       <BrowserRouter>
