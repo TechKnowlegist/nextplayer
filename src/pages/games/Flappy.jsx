@@ -115,6 +115,7 @@ export default function Flappy() {
     if (b.cross.justPressed || b.up.justPressed || s.tapFlap) {
       s.vy = FLAP_VY;
       s.tapFlap = false;
+      play('jump');
     }
     s.vy += GRAVITY * delta;
     s.birdY += s.vy * delta;

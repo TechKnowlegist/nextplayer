@@ -220,7 +220,7 @@ export default function Asteroids() {
           bl.life = -1;
           s.score += (4 - a.size) * 20;
           setScore(s.score);
-          play('hit');
+          play('explosion');
           break;
         }
       }
@@ -241,6 +241,7 @@ export default function Asteroids() {
         if (Math.hypot(a.x - s.ship.x, a.y - s.ship.y) < a.radius + SHIP_RADIUS * 0.6) {
           s.lives -= 1;
           setLives(s.lives);
+          play('hurt');
           input.rumble({ strong: 0.6, weak: 0.6, duration: 200 });
           if (s.lives <= 0) return endGame(s);
           s.ship = { x: W / 2, y: H / 2, heading: -Math.PI / 2, vx: 0, vy: 0 };

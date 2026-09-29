@@ -147,21 +147,27 @@ export default function Pong() {
     if (s.ball.x < 0) {
       s.aiScore += 1;
       setAiScore(s.aiScore);
-      play('gameOver');
       if (s.aiScore >= WIN_SCORE) {
         s.alive = false;
         setGameOver(true);
-      } else serve(s, false);
+        play('gameOver');
+      } else {
+        play('hurt');
+        serve(s, false);
+      }
     } else if (s.ball.x > W) {
       s.playerScore += 1;
       setPlayerScore(s.playerScore);
-      play('eat');
       if (s.playerScore >= WIN_SCORE) {
         s.alive = false;
         setWon(true);
+        play('waveClear');
         submitScore(s.playerScore - s.aiScore);
         setBoardVersion((v) => v + 1);
-      } else serve(s, true);
+      } else {
+        play('scoreTick');
+        serve(s, true);
+      }
     }
 
     draw(s);

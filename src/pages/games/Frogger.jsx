@@ -118,6 +118,7 @@ export default function Frogger() {
     if (canMove(s.nextDir)) {
       s.player.x += s.nextDir.x;
       s.player.y += s.nextDir.y;
+      play('jump');
       if (s.nextDir.y < 0) {
         s.score += 10;
         setScore(s.score);

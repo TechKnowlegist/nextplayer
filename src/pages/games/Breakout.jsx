@@ -180,6 +180,7 @@ export default function Breakout() {
         endGame(s, false);
       } else {
         s.ball = { x: W / 2, y: PADDLE_Y - 20, vx: BALL_SPEED_START * 0.6, vy: -BALL_SPEED_START };
+        play('hurt');
         input.rumble({ strong: 0.5, weak: 0.5, duration: 150 });
       }
     }

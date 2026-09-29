@@ -89,6 +89,7 @@ export default function Simon() {
           setFlashDir(s.flashDir);
           s.watchIndex += 1;
           s.watchTimer = FLASH_MS;
+          play('click');
         } else {
           s.phase = 'input';
           setPhase('input');

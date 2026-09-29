@@ -220,7 +220,7 @@ export default function MazeChomper() {
       s.dotsLeft -= 1;
       s.score += cell === 'power' ? 50 : 10;
       setScore(s.score);
-      play('eat');
+      play(cell === 'power' ? 'powerUp' : 'eat');
       if (cell === 'power') {
         s.frightTimer = FRIGHT_MS;
         s.ghosts.forEach((g) => (g.scared = true));
@@ -245,6 +245,7 @@ export default function MazeChomper() {
         if (g.scared) {
           s.score += 100;
           setScore(s.score);
+          play('coin');
           g.x = g.home.x;
           g.y = g.home.y;
           g.scared = false;
@@ -313,6 +314,7 @@ export default function MazeChomper() {
       if (s.readyTimer <= 0) {
         s.readyTimer = 0;
         setReady(false);
+        play('countdownGo');
       }
       draw(s);
       return;

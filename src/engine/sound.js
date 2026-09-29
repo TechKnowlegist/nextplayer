@@ -1,13 +1,25 @@
-// Tiny sound-effect player shared by every game. Files are .ogg (Kenney's
-// "Digital Audio" pack, CC0 — see public/sounds/CREDITS.txt), which Chrome,
-// Firefox, and Edge all play fine but Safari does not support at all — on
-// Safari these calls just silently no-op rather than erroring.
+// Tiny sound-effect player shared by every game. Files are .ogg (see
+// public/sounds/CREDITS.txt), which Chrome, Firefox, and Edge all play fine
+// but Safari does not support at all — on Safari these calls just silently
+// no-op rather than erroring.
 const SOUNDS = {
-  eat: '/sounds/eat.ogg',
+  eat: '/sounds/pickup.ogg',
   gameOver: '/sounds/game-over.ogg',
   shoot: '/sounds/shoot.ogg',
   hit: '/sounds/hit.ogg',
-  waveClear: '/sounds/wave-clear.ogg',
+  waveClear: '/sounds/level-complete.ogg',
+  jump: '/sounds/jump.ogg',
+  coin: '/sounds/coin.ogg',
+  powerUp: '/sounds/power-up.ogg',
+  boost: '/sounds/boost.ogg',
+  click: '/sounds/click.ogg',
+  pause: '/sounds/pause.ogg',
+  unpause: '/sounds/unpause.ogg',
+  hurt: '/sounds/hurt.ogg',
+  explosion: '/sounds/explosion.ogg',
+  countdownBeep: '/sounds/countdown-beep.ogg',
+  countdownGo: '/sounds/countdown-go.ogg',
+  scoreTick: '/sounds/score-tick.ogg',
 };
 
 const MUTE_KEY = 'np-sound-muted';

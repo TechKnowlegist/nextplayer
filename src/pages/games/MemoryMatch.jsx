@@ -93,6 +93,7 @@ export default function MemoryMatch() {
 
     if (b.cross.justPressed) {
       if (matched.includes(cursor) || flipped.includes(cursor) || flipped.length >= 2) return;
+      play('click');
       const next = [...flipped, cursor];
       setFlipped(next);
       if (next.length === 2) setMoves((m) => m + 1);

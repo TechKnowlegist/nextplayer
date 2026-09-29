@@ -87,6 +87,8 @@ export default function WhackAMole() {
         input.rumble({ strong: 0, weak: 0.3, duration: 60 });
         setMole(randomCell(mole));
         s.moleTimer = Math.max(500, 1400 - s.score * 30);
+      } else {
+        play('click');
       }
     }
 

@@ -4,6 +4,7 @@ import input from '../../engine/input';
 import { useControllerFrame, useMenuNav } from '../../engine/useController';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { formatLapTime as fmt } from '../../engine/scoreFormat';
+import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 
@@ -194,6 +195,9 @@ export default function DriftRacer() {
         setBestLapTime(lapTime);
         submitScore(lapTime);
         setBoardVersion((v) => v + 1);
+        play('powerUp');
+      } else {
+        play('scoreTick');
       }
     } else if (s.angleAccum <= -Math.PI * 2) {
       // driving backward a full lap — just resync so it doesn't wrap oddly

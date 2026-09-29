@@ -71,6 +71,7 @@ export default function TicTacToe() {
         if (i == null) return prev;
         const next = [...prev];
         next[i] = 'O';
+        play('click');
         const w = checkWinner(next);
         if (w) {
           setWinner(w);
@@ -106,6 +107,7 @@ export default function TicTacToe() {
         if (prev[cursor]) return prev;
         const next = [...prev];
         next[cursor] = 'X';
+        play('click');
         const w = checkWinner(next);
         if (w) {
           setWinner(w);

@@ -184,7 +184,7 @@ export default function StarBlaster() {
           bl.y = -100; // mark for removal
           s.score += 10;
           setScore(s.score);
-          play('hit');
+          play('explosion');
         }
       }
     }
@@ -196,6 +196,7 @@ export default function StarBlaster() {
         e.alive = false;
         s.lives -= 1;
         setLives(s.lives);
+        play('hurt');
         input.rumble({ strong: 0.5, weak: 0.5, duration: 150 });
         if (s.lives <= 0) return endGame(s);
       }
@@ -206,6 +207,7 @@ export default function StarBlaster() {
         bl.y = CANVAS_H + 100;
         s.lives -= 1;
         setLives(s.lives);
+        play('hurt');
         input.rumble({ strong: 0.5, weak: 0.5, duration: 150 });
         if (s.lives <= 0) return endGame(s);
       }
