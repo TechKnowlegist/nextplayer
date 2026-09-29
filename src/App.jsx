@@ -9,6 +9,7 @@ import { gameBySlug } from './gamesData';
 import NavBar from './components/NavBar';
 import TouchControls from './components/TouchControls';
 import Home from './pages/Home';
+import ConsoleMode from './pages/ConsoleMode';
 import Help from './pages/Help';
 import Leaderboards from './pages/Leaderboards';
 import Chat from './pages/Chat';
@@ -30,6 +31,23 @@ import Game2048 from './pages/games/Game2048';
 import MemoryMatch from './pages/games/MemoryMatch';
 import NotFound from './pages/NotFound';
 import './App.css';
+
+// Console Mode is a full-screen overlay that visually covers the nav and
+// footer, but without actually unmounting them they'd still be real,
+// focusable elements sitting underneath it — the site-wide D-pad focus
+// navigation (ControllerNavigator) has no concept of z-index/occlusion, so
+// it would happily "find" and focus a nav link you can't even see.
+function NavBarGate() {
+  const { pathname } = useLocation();
+  if (pathname === '/console') return null;
+  return <NavBar />;
+}
+
+function FooterGate() {
+  const { pathname } = useLocation();
+  if (pathname === '/console') return null;
+  return <footer className="np-footer">© 2026 Next Player</footer>;
+}
 
 // Only shows on touch devices, and only on an actual game page — the
 // home page, account, and controller-test pages don't need it.
@@ -86,9 +104,10 @@ export default function App() {
       <BrowserRouter>
         <ControllerNavigator />
         <RecentlyPlayedTracker />
-        <NavBar />
+        <NavBarGate />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/console" element={<ConsoleMode />} />
           <Route path="/help" element={<Help />} />
           <Route path="/leaderboards" element={<Leaderboards />} />
           <Route path="/chat" element={<Chat />} />
@@ -112,7 +131,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <TouchControlsGate />
-        <footer className="np-footer">© 2026 Next Player</footer>
+        <FooterGate />
       </BrowserRouter>
     </AuthProvider>
   );

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play, isMuted, toggleMuted } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const GRID = 20;
 const CELL = 20;
@@ -36,7 +38,7 @@ function freshState() {
 }
 
 export default function Snake() {
-  useMenuNav(false); // this page drives the D-pad itself
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const stateRef = useRef(freshState());
@@ -127,6 +129,14 @@ export default function Snake() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (s.alive && b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time; // avoid a huge delta spike whichever way we just toggled
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     // Cap the gap between frames — a backgrounded tab, GC pause, or just a
     // slow frame would otherwise dump a huge delta into the accumulator
@@ -135,7 +145,6 @@ export default function Snake() {
     const delta = Math.min(time - s.lastTime, TICK_MS * 3);
     s.lastTime = time;
 
-    const b = state.buttons;
     const { lx, ly } = state.sticks;
 
     if (!s.alive) {
@@ -191,6 +200,8 @@ export default function Snake() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">D-pad / left stick / arrow keys / WASD to move</p>
 

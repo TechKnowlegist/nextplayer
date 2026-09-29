@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { formatLapTime as fmt } from '../../engine/scoreFormat';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const CANVAS_SIZE = 480;
 const CENTER = CANVAS_SIZE / 2;
@@ -55,7 +57,7 @@ function freshState() {
 }
 
 export default function DriftRacer() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const canvasRef = useRef(null);
   const stateRef = useRef(freshState());
   const [lap, setLap] = useState(0);
@@ -134,12 +136,19 @@ export default function DriftRacer() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time;
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     const delta = Math.min(time - s.lastTime, 100);
     s.lastTime = time;
     s.raceTime += delta;
 
-    const b = state.buttons;
     const { lx, ly } = state.sticks;
 
     const throttle = b.r2.pressed || b.up.pressed || ly < -0.3 ? 1 : b.l2.pressed || b.down.pressed || ly > 0.3 ? -1 : 0;
@@ -221,6 +230,8 @@ export default function DriftRacer() {
       <div className="np-snake-wrap">
         <canvas ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="np-snake-canvas" />
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <div className="np-racer-actions">
         <button className="np-btn np-btn-secondary" onClick={reset}>Reset</button>

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const W = 400;
 const H = 560;
@@ -32,7 +34,7 @@ function freshState() {
 }
 
 export default function Flappy() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const stateRef = useRef(freshState());
@@ -100,11 +102,17 @@ export default function Flappy() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (s.alive && b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time;
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     const delta = Math.min(time - s.lastTime, 100);
     s.lastTime = time;
-
-    const b = state.buttons;
 
     if (!s.alive) {
       if (b.cross.justPressed) reset();
@@ -176,6 +184,8 @@ export default function Flappy() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">✕ or Up to flap</p>
 

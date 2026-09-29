@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const CANVAS_W = 420;
 const CANVAS_H = 560;
@@ -55,7 +57,7 @@ function freshState() {
 }
 
 export default function StarBlaster() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const stateRef = useRef(freshState());
@@ -134,12 +136,19 @@ export default function StarBlaster() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (s.alive && b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time;
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     const delta = Math.min(time - s.lastTime, 100);
     s.lastTime = time;
     s.elapsed += delta;
 
-    const b = state.buttons;
     const { lx } = state.sticks;
 
     if (!s.alive) {
@@ -250,6 +259,8 @@ export default function StarBlaster() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">Left/right or stick to move · ✕ or R2 to fire</p>
 

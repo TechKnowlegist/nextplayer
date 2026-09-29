@@ -1697,6 +1697,40 @@ body:has(.np-touch-controls) .np-snake-wrap {
   pointer-events: none;
 }
 
+/* ---- Unified pause menu, shared by every game (Options/Start or P) ---- */
+.np-pause-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 7, 10, 0.88);
+  backdrop-filter: blur(2px);
+}
+
+.np-pause-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 32px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  text-align: center;
+}
+
+.np-pause-panel h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.np-pause-panel .np-btn {
+  width: 180px;
+}
+
 .np-boot-tap {
   position: absolute;
   bottom: 12%;
@@ -1709,4 +1743,85 @@ body:has(.np-touch-controls) .np-snake-wrap {
 @keyframes np-boot-pulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
+}
+
+/* ---- Console Mode: full-screen, controller-only game picker ---- */
+.np-console {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 40px;
+  background: radial-gradient(circle at 50% 20%, #111827, #05070a 70%);
+  overflow-y: auto;
+}
+
+.np-console-header {
+  text-align: center;
+}
+
+.np-console-header h1 {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+.np-console-hint {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.np-console-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.np-console-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  aspect-ratio: 1;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.np-console-tile:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--accent-2);
+}
+
+.np-console-tile-art {
+  font-size: 2.6rem;
+}
+
+.np-console-tile-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+}
+
+.np-console-exit {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.np-console-exit:hover {
+  color: white;
 }

@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { formatMoves } from '../../engine/scoreFormat';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const SYMBOLS = ['🐍', '🏎️', '👾', '🚀', '🎮', '⭐', '🔥', '💎'];
 const COLS = 4;
@@ -22,7 +24,7 @@ function shuffledDeck() {
 }
 
 export default function MemoryMatch() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const [deck, setDeck] = useState(shuffledDeck);
   const [matched, setMatched] = useState([]);
@@ -79,6 +81,9 @@ export default function MemoryMatch() {
 
   useControllerFrame((state) => {
     const b = state.buttons;
+    if (!won && b.options.justPressed) setPaused((p) => !p);
+    if (paused) return;
+
     if (won) {
       if (b.cross.justPressed) reset();
       if (b.circle.justPressed) navigate('/');
@@ -136,6 +141,8 @@ export default function MemoryMatch() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">D-pad to move the cursor · ✕ to flip a card</p>
 

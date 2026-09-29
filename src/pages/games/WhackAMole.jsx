@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const GRID = 3;
 const ROUND_MS = 30000;
@@ -30,7 +32,7 @@ function freshState() {
 }
 
 export default function WhackAMole() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const stateRef = useRef(freshState());
   const [cursor, setCursor] = useState({ x: 1, y: 1 });
@@ -58,11 +60,18 @@ export default function WhackAMole() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (s.alive && b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time;
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     const delta = Math.min(time - s.lastTime, 100);
     s.lastTime = time;
 
-    const b = state.buttons;
     const { lx, ly } = state.sticks;
 
     if (!s.alive) {
@@ -152,6 +161,8 @@ export default function WhackAMole() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">D-pad / stick to move the cursor · ✕ to whack</p>
 

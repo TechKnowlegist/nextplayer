@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const SIZE = 4;
 const BEST_KEY = 'np-2048-best';
@@ -93,7 +95,7 @@ function freshGrid() {
 }
 
 export default function Game2048() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const [grid, setGrid] = useState(freshGrid);
   const [score, setScore] = useState(0);
@@ -146,6 +148,9 @@ export default function Game2048() {
 
   useControllerFrame((state) => {
     const b = state.buttons;
+    if (!gameOver && !won && b.options.justPressed) setPaused((p) => !p);
+    if (paused) return;
+
     if (gameOver || won) {
       if (b.cross.justPressed) reset();
       if (b.circle.justPressed) navigate('/');
@@ -196,6 +201,8 @@ export default function Game2048() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">D-pad / stick / arrow keys / WASD to slide the tiles</p>
 

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const DIRS = ['up', 'right', 'down', 'left'];
 const FLASH_MS = 450;
@@ -25,7 +27,7 @@ function freshState() {
 }
 
 export default function Simon() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const stateRef = useRef(freshState());
   const [round, setRound] = useState(1);
@@ -65,11 +67,17 @@ export default function Simon() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (s.phase !== 'gameover' && b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time;
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     const delta = Math.min(time - s.lastTime, 100);
     s.lastTime = time;
-
-    const b = state.buttons;
 
     if (s.phase === 'gameover') {
       if (b.cross.justPressed) reset();
@@ -158,6 +166,8 @@ export default function Simon() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">Watch the pattern, then repeat it with the D-pad / arrow keys</p>
 

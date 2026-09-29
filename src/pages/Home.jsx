@@ -34,6 +34,7 @@ export default function Home() {
           <a href="#games" className="np-btn np-btn-primary">Browse games</a>
           <Link to="/help" className="np-btn np-btn-secondary">How to play</Link>
           <Link to="/controller" className="np-btn np-btn-secondary">Test your controller</Link>
+          <Link to="/console" className="np-btn np-btn-secondary">🎮 Console Mode</Link>
         </div>
         <div className="np-hero-hint">
           Joy-Cons or a Pro Controller work great if connected to your computer. Playing directly in the

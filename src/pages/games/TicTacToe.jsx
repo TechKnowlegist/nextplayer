@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const LINES = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -39,7 +41,7 @@ function aiMove(board) {
 }
 
 export default function TicTacToe() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const [board, setBoard] = useState(Array(9).fill(null));
   const [cursor, setCursor] = useState(4);
@@ -90,6 +92,9 @@ export default function TicTacToe() {
 
   useControllerFrame((state) => {
     const b = state.buttons;
+    if (!winner && b.options.justPressed) setPaused((p) => !p);
+    if (paused) return;
+
     if (winner) {
       if (b.cross.justPressed) reset();
       if (b.circle.justPressed) navigate('/');
@@ -159,6 +164,8 @@ export default function TicTacToe() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">D-pad to move the cursor · ✕ to place</p>
 

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import input from '../../engine/input';
-import { useControllerFrame, useMenuNav } from '../../engine/useController';
+import { useControllerFrame } from '../../engine/useController';
+import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
+import PauseMenu from '../../components/PauseMenu';
 
 const COLS = 11;
 const ROWS = 11;
@@ -46,7 +48,7 @@ function freshState() {
 }
 
 export default function Frogger() {
-  useMenuNav(false);
+  const [paused, setPaused] = usePauseMenu();
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const stateRef = useRef(freshState());
@@ -138,11 +140,18 @@ export default function Frogger() {
 
   useControllerFrame((state, time) => {
     const s = stateRef.current;
+    const b = state.buttons;
+
+    if (s.alive && b.options.justPressed) {
+      setPaused((p) => !p);
+      s.lastTime = time;
+    }
+    if (paused) return;
+
     if (s.lastTime == null) s.lastTime = time;
     const delta = Math.min(time - s.lastTime, TICK_MS * 3);
     s.lastTime = time;
 
-    const b = state.buttons;
     const { lx, ly } = state.sticks;
 
     if (!s.alive) {
@@ -205,6 +214,8 @@ export default function Frogger() {
           </div>
         )}
       </div>
+
+      {paused && <PauseMenu onResume={() => setPaused(false)} />}
 
       <p className="np-snake-controls">D-pad / left stick / arrow keys / WASD — cross the traffic to score</p>
 
