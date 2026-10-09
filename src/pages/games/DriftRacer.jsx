@@ -4,11 +4,13 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { formatLapTime as fmt } from '../../engine/scoreFormat';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const CANVAS_SIZE = 480;
 const CENTER = CANVAS_SIZE / 2;
@@ -64,6 +66,7 @@ export default function DriftRacer() {
   const [lastLapTime, setLastLapTime] = useState(null);
   const [bestLapTime, setBestLapTime] = useState(() => Number(localStorage.getItem(BEST_KEY)) || null);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('drift-racer');
 
   useEffect(() => {
@@ -217,7 +220,7 @@ export default function DriftRacer() {
   });
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Drift Racer</h1>
         <div className="np-snake-scores">
@@ -225,6 +228,7 @@ export default function DriftRacer() {
           <span>Last: {fmt(lastLapTime)}</span>
           <span>Best: {fmt(bestLapTime)}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -242,8 +246,12 @@ export default function DriftRacer() {
         R2/L2 or Up/Down or left stick to accelerate/brake · Left/Right or stick to steer
       </p>
 
-      <Leaderboard gameId="drift-racer" refreshKey={boardVersion} ascending format={fmt} />
-      <ChatFeed channel="leaderboard:drift-racer" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="drift-racer" refreshKey={boardVersion} ascending format={fmt} />
+          <ChatFeed channel="leaderboard:drift-racer" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

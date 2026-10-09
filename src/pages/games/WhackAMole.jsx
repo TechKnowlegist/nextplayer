@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const GRID = 3;
 const ROUND_MS = 30000;
@@ -42,6 +44,7 @@ export default function WhackAMole() {
   const [timeLeft, setTimeLeft] = useState(ROUND_MS);
   const [gameOver, setGameOver] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('whack-a-mole');
 
   useEffect(() => {
@@ -125,7 +128,7 @@ export default function WhackAMole() {
   });
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Whack-a-Mole</h1>
         <div className="np-snake-scores">
@@ -133,6 +136,7 @@ export default function WhackAMole() {
           <span>Time: {(timeLeft / 1000).toFixed(1)}s</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap np-whack-wrap">
@@ -166,8 +170,12 @@ export default function WhackAMole() {
 
       <p className="np-snake-controls">D-pad / stick to move the cursor · ✕ to whack</p>
 
-      <Leaderboard gameId="whack-a-mole" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:whack-a-mole" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="whack-a-mole" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:whack-a-mole" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

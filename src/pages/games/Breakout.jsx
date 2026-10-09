@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const W = 440;
 const H = 520;
@@ -58,6 +60,7 @@ export default function Breakout() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('breakout');
 
   useEffect(() => {
@@ -202,7 +205,7 @@ export default function Breakout() {
   const done = gameOver || won;
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Breakout</h1>
         <div className="np-snake-scores">
@@ -210,6 +213,7 @@ export default function Breakout() {
           <span>Lives: {lives}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -231,8 +235,12 @@ export default function Breakout() {
 
       <p className="np-snake-controls">Left/right or stick to move the paddle</p>
 
-      <Leaderboard gameId="breakout" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:breakout" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="breakout" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:breakout" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

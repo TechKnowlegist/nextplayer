@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const W = 400;
 const H = 560;
@@ -42,6 +44,7 @@ export default function Flappy() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('flappy');
 
   useEffect(() => {
@@ -155,13 +158,14 @@ export default function Flappy() {
   });
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Flappy</h1>
         <div className="np-snake-scores">
           <span>Score: {score}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -189,8 +193,12 @@ export default function Flappy() {
 
       <p className="np-snake-controls">✕ or Up to flap</p>
 
-      <Leaderboard gameId="flappy" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:flappy" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="flappy" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:flappy" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

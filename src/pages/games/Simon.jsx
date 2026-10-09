@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const DIRS = ['up', 'right', 'down', 'left'];
 const FLASH_MS = 450;
@@ -36,6 +38,7 @@ export default function Simon() {
   const [flashDir, setFlashDir] = useState(null);
   const [phase, setPhase] = useState('watching');
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('simon');
 
   useEffect(() => {
@@ -136,13 +139,14 @@ export default function Simon() {
   });
 
   return (
-    <main className="np-page np-simon">
+    <main className={isFullscreen ? 'np-page np-simon np-game-fullscreen' : 'np-page np-simon'}>
       <div className="np-snake-hud">
         <h1>Simon</h1>
         <div className="np-snake-scores">
           <span>Round: {round}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-simon-wrap">
@@ -171,8 +175,12 @@ export default function Simon() {
 
       <p className="np-snake-controls">Watch the pattern, then repeat it with the D-pad / arrow keys</p>
 
-      <Leaderboard gameId="simon" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:simon" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="simon" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:simon" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

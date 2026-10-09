@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const W = 480;
 const H = 480;
@@ -82,6 +84,7 @@ export default function Asteroids() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('asteroids');
 
   useEffect(() => {
@@ -271,7 +274,7 @@ export default function Asteroids() {
   });
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Asteroids</h1>
         <div className="np-snake-scores">
@@ -280,6 +283,7 @@ export default function Asteroids() {
           <span>Lives: {lives}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -301,8 +305,12 @@ export default function Asteroids() {
 
       <p className="np-snake-controls">Left/right to turn · Up or R2 to thrust · ✕ to fire</p>
 
-      <Leaderboard gameId="asteroids" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:asteroids" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="asteroids" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:asteroids" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

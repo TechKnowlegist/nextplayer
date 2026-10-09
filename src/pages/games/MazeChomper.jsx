@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const CELL = 26;
 const MW = 7; // maze width in cells
@@ -162,6 +164,7 @@ export default function MazeChomper() {
   const [won, setWon] = useState(false);
   const [ready, setReady] = useState(true);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('maze-chomper');
 
   useEffect(() => {
@@ -347,13 +350,14 @@ export default function MazeChomper() {
   const done = gameOver || won;
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Maze Chomper</h1>
         <div className="np-snake-scores">
           <span>Score: {score}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -380,8 +384,12 @@ export default function MazeChomper() {
 
       <p className="np-snake-controls">D-pad / left stick / arrow keys / WASD — grab the big dots to turn the tables</p>
 
-      <Leaderboard gameId="maze-chomper" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:maze-chomper" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="maze-chomper" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:maze-chomper" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

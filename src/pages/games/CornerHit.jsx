@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { formatLapTime } from '../../engine/scoreFormat';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 // Corner Hit is a self-contained game (its own canvas, shop, skins, sound and
 // save data) kept as one HTML file next to this page. It's loaded as a string
@@ -21,6 +23,7 @@ export default function CornerHit() {
   const [paused, setPaused] = usePauseMenu();
   const frameRef = useRef(null);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('corner-hit');
   const [gameHtml, setGameHtml] = useState(null);
 
@@ -65,9 +68,10 @@ export default function CornerHit() {
   });
 
   return (
-    <main className="np-page np-snake np-cornerhit">
+    <main className={isFullscreen ? 'np-page np-snake np-cornerhit np-game-fullscreen' : 'np-page np-snake np-cornerhit'}>
       <div className="np-snake-hud">
         <h1>Corner Hit</h1>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap np-cornerhit-wrap">
@@ -87,9 +91,13 @@ export default function CornerHit() {
         P or Options to pause.
       </p>
 
-      <h2 className="np-cornerhit-board-title">Fastest corner wins</h2>
-      <Leaderboard gameId="corner-hit" refreshKey={boardVersion} ascending format={formatLapTime} />
-      <ChatFeed channel="leaderboard:corner-hit" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <h2 className="np-cornerhit-board-title">Fastest corner wins</h2>
+          <Leaderboard gameId="corner-hit" refreshKey={boardVersion} ascending format={formatLapTime} />
+          <ChatFeed channel="leaderboard:corner-hit" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

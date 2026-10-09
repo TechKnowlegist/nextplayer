@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const LINES = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -51,6 +53,7 @@ export default function TicTacToe() {
   const [boardVersion, setBoardVersion] = useState(0);
   // Leaderboard tracks the most wins in a single visit — a single match's
   // result (win/lose/draw) isn't a "score" the way it is in the other games.
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('tic-tac-toe');
 
   useEffect(() => {
@@ -133,13 +136,14 @@ export default function TicTacToe() {
   const message = winner === 'X' ? 'You Win!' : winner === 'O' ? 'CPU Wins' : winner === 'draw' ? "It's a Draw" : null;
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Tic-Tac-Toe</h1>
         <div className="np-snake-scores">
           <span>You: {wins.player}</span>
           <span>CPU: {wins.ai}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap np-ttt-wrap">
@@ -169,8 +173,12 @@ export default function TicTacToe() {
 
       <p className="np-snake-controls">D-pad to move the cursor · ✕ to place</p>
 
-      <Leaderboard gameId="tic-tac-toe" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:tic-tac-toe" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="tic-tac-toe" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:tic-tac-toe" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

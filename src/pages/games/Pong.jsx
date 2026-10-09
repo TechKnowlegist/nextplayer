@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const W = 480;
 const H = 320;
@@ -43,6 +45,7 @@ export default function Pong() {
   const [boardVersion, setBoardVersion] = useState(0);
   // Leaderboard tracks winning margin, not raw score — a win always ends at
   // WIN_SCORE, so the margin (7-0 vs. 7-6) is the only number that varies.
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('pong');
 
   useEffect(() => {
@@ -185,13 +188,14 @@ export default function Pong() {
   const done = gameOver || won;
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Pong</h1>
         <div className="np-snake-scores">
           <span>You: {playerScore}</span>
           <span>CPU: {aiScore}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -213,8 +217,12 @@ export default function Pong() {
 
       <p className="np-snake-controls">Up/Down or left stick — first to {WIN_SCORE} wins</p>
 
-      <Leaderboard gameId="pong" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:pong" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="pong" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:pong" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const CANVAS_W = 420;
 const CANVAS_H = 560;
@@ -67,6 +69,7 @@ export default function StarBlaster() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [gameOver, setGameOver] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('star-blaster');
 
   useEffect(() => {
@@ -234,7 +237,7 @@ export default function StarBlaster() {
   });
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Star Blaster</h1>
         <div className="np-snake-scores">
@@ -243,6 +246,7 @@ export default function StarBlaster() {
           <span>Lives: {lives}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap">
@@ -264,8 +268,12 @@ export default function StarBlaster() {
 
       <p className="np-snake-controls">Left/right or stick to move · ✕ or R2 to fire</p>
 
-      <Leaderboard gameId="star-blaster" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:star-blaster" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="star-blaster" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:star-blaster" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

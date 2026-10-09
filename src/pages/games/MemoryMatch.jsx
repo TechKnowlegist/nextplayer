@@ -4,11 +4,13 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { formatMoves } from '../../engine/scoreFormat';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const SYMBOLS = ['🐍', '🏎️', '👾', '🚀', '🎮', '⭐', '🔥', '💎'];
 const COLS = 4;
@@ -35,6 +37,7 @@ export default function MemoryMatch() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || null);
   const [won, setWon] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('memory-match');
 
   useEffect(() => {
@@ -106,13 +109,14 @@ export default function MemoryMatch() {
   });
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>Memory Match</h1>
         <div className="np-snake-scores">
           <span>Moves: {moves}</span>
           <span>Best: {best ?? '--'}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap np-memory-wrap">
@@ -146,8 +150,12 @@ export default function MemoryMatch() {
 
       <p className="np-snake-controls">D-pad to move the cursor · ✕ to flip a card</p>
 
-      <Leaderboard gameId="memory-match" refreshKey={boardVersion} ascending format={formatMoves} />
-      <ChatFeed channel="leaderboard:memory-match" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="memory-match" refreshKey={boardVersion} ascending format={formatMoves} />
+          <ChatFeed channel="leaderboard:memory-match" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }

@@ -4,6 +4,7 @@ import { AuthProvider } from './AuthContext.jsx';
 import BootScreen from './components/BootScreen';
 import ControllerNavigator from './engine/ControllerNavigator';
 import { useIsTouchDevice } from './engine/useController';
+import { useIsFullscreenActive } from './engine/useFullscreen';
 import { recordPlayed } from './engine/recentlyPlayed';
 import { gameBySlug } from './gamesData';
 import NavBar from './components/NavBar';
@@ -37,16 +38,20 @@ import './App.css';
 // footer, but without actually unmounting them they'd still be real,
 // focusable elements sitting underneath it — the site-wide D-pad focus
 // navigation (ControllerNavigator) has no concept of z-index/occlusion, so
-// it would happily "find" and focus a nav link you can't even see.
+// it would happily "find" and focus a nav link you can't even see. A
+// game's own fullscreen mode (useFullscreen) is the same situation, so it
+// gates on the same two conditions.
 function NavBarGate() {
   const { pathname } = useLocation();
-  if (pathname === '/console') return null;
+  const fullscreen = useIsFullscreenActive();
+  if (pathname === '/console' || fullscreen) return null;
   return <NavBar />;
 }
 
 function FooterGate() {
   const { pathname } = useLocation();
-  if (pathname === '/console') return null;
+  const fullscreen = useIsFullscreenActive();
+  if (pathname === '/console' || fullscreen) return null;
   return <footer className="np-footer">© 2026 Next Player</footer>;
 }
 

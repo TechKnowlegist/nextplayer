@@ -4,10 +4,12 @@ import input from '../../engine/input';
 import { useControllerFrame } from '../../engine/useController';
 import { usePauseMenu } from '../../engine/usePauseMenu';
 import { useSubmitScore } from '../../engine/useSubmitScore';
+import { useFullscreen } from '../../engine/useFullscreen';
 import { play } from '../../engine/sound';
 import Leaderboard from '../../components/Leaderboard';
 import ChatFeed from '../../components/ChatFeed';
 import PauseMenu from '../../components/PauseMenu';
+import FullscreenButton from '../../components/FullscreenButton';
 
 const SIZE = 4;
 const BEST_KEY = 'np-2048-best';
@@ -103,6 +105,7 @@ export default function Game2048() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [boardVersion, setBoardVersion] = useState(0);
+  const [isFullscreen, toggleFullscreen] = useFullscreen();
   const submitScore = useSubmitScore('2048');
 
   useEffect(() => {
@@ -165,13 +168,14 @@ export default function Game2048() {
   const done = gameOver || won;
 
   return (
-    <main className="np-page np-snake">
+    <main className={isFullscreen ? 'np-page np-snake np-game-fullscreen' : 'np-page np-snake'}>
       <div className="np-snake-hud">
         <h1>2048</h1>
         <div className="np-snake-scores">
           <span>Score: {score}</span>
           <span>Best: {best}</span>
         </div>
+        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       </div>
 
       <div className="np-snake-wrap np-2048-wrap">
@@ -206,8 +210,12 @@ export default function Game2048() {
 
       <p className="np-snake-controls">D-pad / stick / arrow keys / WASD to slide the tiles</p>
 
-      <Leaderboard gameId="2048" refreshKey={boardVersion} />
-      <ChatFeed channel="leaderboard:2048" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+      {!isFullscreen && (
+        <>
+          <Leaderboard gameId="2048" refreshKey={boardVersion} />
+          <ChatFeed channel="leaderboard:2048" title="Leaderboard Chat" placeholder="Talk trash, give tips..." />
+        </>
+      )}
     </main>
   );
 }
