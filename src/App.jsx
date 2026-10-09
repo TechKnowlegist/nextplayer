@@ -29,6 +29,7 @@ import WhackAMole from './pages/games/WhackAMole';
 import TicTacToe from './pages/games/TicTacToe';
 import Game2048 from './pages/games/Game2048';
 import MemoryMatch from './pages/games/MemoryMatch';
+import CornerHit from './pages/games/CornerHit';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -54,7 +55,9 @@ function FooterGate() {
 function TouchControlsGate() {
   const isTouch = useIsTouchDevice();
   const { pathname } = useLocation();
-  if (!isTouch || !pathname.startsWith('/games/')) return null;
+  // Corner Hit runs its own tap controls inside its frame, so the on-screen
+  // D-pad would only cover the game.
+  if (!isTouch || !pathname.startsWith('/games/') || pathname === '/games/corner-hit') return null;
   return <TouchControls thrust={pathname === '/games/asteroids'} />;
 }
 
@@ -127,6 +130,7 @@ export default function App() {
           <Route path="/games/tic-tac-toe" element={<TicTacToe />} />
           <Route path="/games/2048" element={<Game2048 />} />
           <Route path="/games/memory-match" element={<MemoryMatch />} />
+          <Route path="/games/corner-hit" element={<CornerHit />} />
           {/* Anything that doesn't match a page above lands on the 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>

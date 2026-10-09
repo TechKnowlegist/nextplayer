@@ -1825,3 +1825,28 @@ body:has(.np-touch-controls) .np-snake-wrap {
 .np-console-exit:hover {
   color: white;
 }
+
+/* ---- Corner Hit (embedded game) ---- */
+.np-cornerhit-wrap {
+  width: 100%;
+  max-width: 1120px;
+}
+
+.np-cornerhit-frame {
+  display: block;
+  width: 100%;
+  height: clamp(560px, calc(100vh - 160px), 960px);
+  border: 0;
+  background: #0b0d14;
+}
+
+.np-cornerhit-board-title {
+  margin: 8px 0 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 700px) {
+  .np-cornerhit-frame {
+    height: calc(100vh - 120px);
+  }
+}

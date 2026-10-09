@@ -149,6 +149,19 @@ export const GAMES = [
     rankAscending: true,
     format: formatMoves,
   },
+  {
+    id: 'cornerhit',
+    title: 'Corner Hit',
+    emoji: '📀',
+    tag: 'New',
+    path: '/games/corner-hit',
+    blurb: 'Bounce the logo, buy upgrades, and finally hit the corner.',
+    goal: 'Every wall bounce earns points. Spend them on upgrades, skins and trails, then land the logo exactly in a corner to win. Winning resets your upgrades, but skins and trails stay.',
+    controls: 'Mouse or tap to shop and nudge · N to nudge · P to pause',
+    // Ranked by fastest win — lower time is better.
+    rankAscending: true,
+    format: formatLapTime,
+  },
 ];
 
 // A game's slug as stored in ArcadeScore.gameId (and used in its route) is
