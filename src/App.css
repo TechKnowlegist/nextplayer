@@ -950,6 +950,17 @@
   height: auto;
 }
 
+/* In fullscreen there's no leaderboard/chat pulling the page past the
+   viewport, but a short browser window (laptop screen, un-maximized
+   window, zoomed-in text) can still be shorter than the HUD + canvas
+   combined — the tallest canvases (560px) plus the HUD above them can
+   still run past the bottom of the screen. Cap the canvas to the space
+   actually left after the HUD so it scales itself down to fit instead. */
+.np-game-fullscreen .np-snake-canvas {
+  max-height: calc(100vh - 170px);
+  width: auto;
+}
+
 .np-snake-overlay {
   position: absolute;
   inset: 0;
